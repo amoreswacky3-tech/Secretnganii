@@ -6,32 +6,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Checkout the code from your repository
+    # 1. Checkout the code
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    # 2. Set up Java 17 (Required for modern Android builds)
+    # 2. Set up Java 17
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
 
-    # 3. Set up Gradle (Using the cloud's Gradle so you don't need gradlew files)
+    # 3. Setup Gradle
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
 
-    # 4. Unzip your Python files into the correct directory
+    # 4. Unzip Python Source (Fixed path)
     - name: Unzip Python Source
       run: |
         mkdir -p app/src/main/python
         unzip source.zip -d app/src/main/python/
 
-    # 5. Build the APK
+    # 5. Build the APK (Added working-directory)
     - name: Build Debug APK
       run: gradle assembleDebug
+      working-directory: . # <-- This ensures it runs in the root
 
-    # 6. Upload the finished APK so you can download it
+    # 6. Upload APK
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
